@@ -70,7 +70,7 @@ decode(TableAndSeq)->
 		{CodeTable,EncodedText} = TableAndSeq,
     	decode(EncodedText,CodeTable,[])
 	catch
-		error:ErrorType -> {error, ErrorType, "The type of the argument is not matching"}
+		error:ErrorType -> {error, ErrorType,"Bad argument. The argument is of wrong data type, or is otherwise badly formed."}
 	end.
 
 decode([], _Table, Result) ->
@@ -79,15 +79,15 @@ decode([], _Table, Result) ->
 decode(Seq, Table, Result) -> 
 	{Char, Rest} = decode_char(Seq, 1, Table),
 	NewChar = Char,
-	Newlist = lists:append([Result, NewChar]),
-	decode(Rest, Table, Newlist).
+	Lst = lists:append([Result, NewChar]),
+	decode(Rest, Table, Lst).
 	
 
 decode_char(Seq, N, Table) ->
 	{Code, Rest} = lists:split(N, Seq),
 	case lists:keyfind(Code, 2, Table) of
-	{C,_} ->
-		{C, Rest};
+	{Ch,_} ->
+		{Ch, Rest};
 	false ->
 		decode_char(Seq, N+1, Table)
 	end.
